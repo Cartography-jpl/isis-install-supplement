@@ -1,0 +1,22 @@
+{
+  "info": {
+    "subdir": "linux-64"
+  },
+  "packages": {
+    "nsl-compatibility-1.00-0.tar.bz2": {
+      "build": "0",
+      "build_number": 0,
+      "depends": [],
+      "md5": "5e9cda279a6883cec67c45d08a7dd4f8",
+      "name": "nsl-compatibility",
+      "sha256": "da0ec2295746dab783dd2bbf68a62404d9f24aa8f3f4fdd2946c1c4dd0672662",
+      "size": 58562,
+      "subdir": "linux-64",
+      "timestamp": 1654814397547,
+      "version": "1.00"
+    }
+  },
+  "packages.conda": {},
+  "removed": [],
+  "repodata_version": 1
+}

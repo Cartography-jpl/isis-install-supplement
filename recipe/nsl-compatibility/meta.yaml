@@ -1,0 +1,22 @@
+{% set name = "nsl-compatibility" %}
+{% set version = "1.00" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+
+build:
+  number: 0
+  script: "mkdir $PREFIX/lib && cp $RECIPE_DIR/files/libnsl-2.17.so $PREFIX/lib && ln -s libnsl-2.17.so $PREFIX/lib/libnsl.so.1"
+
+requirements:
+  host:
+    - sysroot_linux-64
+  run:
+    - sysroot_linux-64
+
+about:
+  summary: This is just a copy of the libnsl.so.1 file found on redhat 7
+
