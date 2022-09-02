@@ -10,3 +10,6 @@ create_delta.bundle
 .cache
 .tramp_history
 python/geocal.egg-info
+# Files we build with makefile
+micromamba
+isis-conda-spec-file-modify.yml
