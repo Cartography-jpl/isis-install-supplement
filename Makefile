@@ -17,7 +17,7 @@ isis-conda-spec-file-modify.yml: isis-conda-spec-file.yml
 
 install-isis-data:
 	mkdir -p $(ISISDATA)
-	cd $(ISISDATA) && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/base . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mex . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mro . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mgs . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/lro .
+	cd $(ISISDATA) && rsync -azv --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/base . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mex . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mro . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mgs . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/lro .
 
 install-mex-data:
 	@echo "Currently Mars Express HRSC doesn't work with the ISIS spice"
