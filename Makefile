@@ -15,6 +15,10 @@ isis-conda-spec-file-modify.yml: isis-conda-spec-file.yml
 	echo "  - file://$$(pwd)/local-channel" >> isis-conda-spec-file-modify.yml
 	( grep -A 1000 local-channel isis-conda-spec-file.yml | grep -v local-channel ) >> isis-conda-spec-file-modify.yml
 
+# Note this will likely need to get replaced with rclone and the S3 buckets
+# But as of 12/2022 the directions on the ISIS download site
+# https://github.com/USGS-Astrogeology/ISIS3#isis-spice-web-service
+# was still to use this rsync command
 install-isis-data:
 	mkdir -p $(ISISDATA)
 	cp rclone.conf $(ISISDATA)
@@ -22,9 +26,7 @@ install-isis-data:
 
 install-mex-data:
 	@echo "Currently Mars Express HRSC doesn't work with the ISIS spice"
-	@echo "web interface. So we download all the kernels needed. We"
-	@echo "could perhaps make this optional, but right now we just"
-	@echo "do this."
+	@echo "web interface. So we download all the kernels needed."
 	cd $(ISISDATA) && rsync -azv --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mex .
 
 # We don't want to depend on there being an exisiting conda environment.
