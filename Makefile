@@ -2,6 +2,17 @@
 ISISROOT=/opt/isis
 ISISDATA=/opt/afids/data/isis_data
 
+# DOCKER has some weird permission issues I don't understand. We may
+# eventually sort this out, but for now just skip setting owner and group
+# if we are in docker
+ifdef IN_DOCKER
+RSYNC_ARG=-azv --no-o --no-g
+TAR_ARG=--no-same-owner
+else
+RSYNC_ARG=-azv
+TAR_ARG=
+endif
+
 # Create the ISIS environment, using our frozen spec file
 install-isis: micromamba isis-conda-spec-file-modify.yml
 	-rm -r $(ISISROOT)
@@ -22,12 +33,16 @@ isis-conda-spec-file-modify.yml: isis-conda-spec-file.yml
 install-isis-data:
 	mkdir -p $(ISISDATA)
 	cp rclone.conf $(ISISDATA)
-	cd $(ISISDATA) && rsync -azv --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/base . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mex . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mro . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mgs . && rsync -azv --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/lro .
+	cd $(ISISDATA) && rsync $(RSYNC_ARG) --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/base . && rsync $(RSYNC_ARG) --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mex . && rsync $(RSYNC_ARG) --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mro . && rsync $(RSYNC_ARG) --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mgs . && rsync $(RSYNC_ARG) --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/lro .
+
+temp:
+	echo $(IN_DOCKER)
+	echo $(RSYNC_ARG)
 
 install-mex-data:
 	@echo "Currently Mars Express HRSC doesn't work with the ISIS spice"
 	@echo "web interface. So we download all the kernels needed."
-	cd $(ISISDATA) && rsync -azv --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mex .
+	cd $(ISISDATA) && rsync $(RSYNC_ARG) --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mex .
 
 # We don't want to depend on there being an exisiting conda environment.
 # So we download a minimum environment micromamba. This is just enough
@@ -36,7 +51,7 @@ micromamba:
 # Not all systems have wget, so we use curl here
 	mkdir Temp
 	curl -L -o Temp/micromamba.tar.bz2 https://micromamba.snakepit.net/api/micromamba/linux-64/latest
-	cd Temp && tar -xf ./micromamba.tar.bz2
+	cd Temp && tar $(TAR_ARG) -xf ./micromamba.tar.bz2
 	mv Temp/bin/micromamba .
 	rm -r Temp
 
