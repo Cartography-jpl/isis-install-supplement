@@ -26,14 +26,15 @@ isis-conda-spec-file-modify.yml: isis-conda-spec-file.yml
 	echo "  - file://$$(pwd)/local-channel" >> isis-conda-spec-file-modify.yml
 	( grep -A 1000 local-channel isis-conda-spec-file.yml | grep -v local-channel ) >> isis-conda-spec-file-modify.yml
 
-# Note this will likely need to get replaced with rclone and the S3 buckets
-# But as of 12/2022 the directions on the ISIS download site
-# https://github.com/USGS-Astrogeology/ISIS3#isis-spice-web-service
-# was still to use this rsync command
+# Old rsync command seems to be replaced with rclone.
 install-isis-data:
 	mkdir -p $(ISISDATA)
 	cp rclone.conf $(ISISDATA)
-	cd $(ISISDATA) && rsync $(RSYNC_ARG) --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/base . && rsync $(RSYNC_ARG) --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mex . && rsync $(RSYNC_ARG) --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mro . && rsync $(RSYNC_ARG) --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mgs . && rsync $(RSYNC_ARG) --exclude='kernels' --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/lro .
+	rclone --progress --config rclone.conf sync base_usgs: $(ISISDATA)/base
+	rclone --progress --config rclone.conf --exclude='kernels/**' sync mex_usgs: $(ISISDATA)/mex
+	rclone --progress --config rclone.conf --exclude='kernels/**' sync mro_usgs: $(ISISDATA)/mro
+	rclone --progress --config rclone.conf --exclude='kernels/**' sync mgs_usgs: $(ISISDATA)/mgs
+y	rclone --progress --config rclone.conf --exclude='kernels/**' sync lro_usgs: $(ISISDATA)/lro
 
 temp:
 	echo $(IN_DOCKER)
@@ -42,7 +43,7 @@ temp:
 install-mex-data:
 	@echo "Currently Mars Express HRSC doesn't work with the ISIS spice"
 	@echo "web interface. So we download all the kernels needed."
-	cd $(ISISDATA) && rsync $(RSYNC_ARG) --delete --partial isisdist.astrogeology.usgs.gov::isisdata/data/mex .
+	rclone --progress --config rclone.conf sync mex_usgs: $(ISISDATA)/mex
 
 # We don't want to depend on there being an exisiting conda environment.
 # So we download a minimum environment micromamba. This is just enough
