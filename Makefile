@@ -17,7 +17,7 @@ endif
 install-isis: micromamba isis-conda-spec-file-modify.yml
 	-rm -r $(ISISROOT)
 	./micromamba create -p $(ISISROOT) -y --file isis-conda-spec-file-modify.yml
-	bash -c "eval '$$($(ISISROOT)/bin/conda shell.bash hook)' && conda activate $(ISISROOT) && conda env config vars set ISISROOT=$(ISISROOT) ISISDATA=$(ISISDATA)"
+	bash -c 'eval "$$($(ISISROOT)/bin/conda shell.bash hook)" && conda activate $(ISISROOT) && conda env config vars set ISISROOT=$(ISISROOT) ISISDATA=$(ISISDATA)'
 
 isis-conda-spec-file-modify.yml: isis-conda-spec-file.yml
 # We need to replace the local-channel line found in the spec file, since
