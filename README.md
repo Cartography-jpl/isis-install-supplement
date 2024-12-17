@@ -1,6 +1,6 @@
 ISIS Install Supplement
 =======================
-This contains a simple recipe for installing the [ISIS software](https://isis.astrogeology.usgs.gov/7.0.0/index.html).
+This contains a simple recipe for installing the [ISIS software](https://isis.astrogeology.usgs.gov/7.0.0/index.html). Used in POMMOS (NPO 52608).
 
 ISIS is installed using [anaconda](https://www.anaconda.com/), using
 the direction from
